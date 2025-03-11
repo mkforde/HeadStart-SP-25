@@ -23,7 +23,7 @@ rememberIt is a minimalist journaling application built with Tauri that combines
 
 ## Technical Stack
 
-- **Frontend**: JavaScript, HTML, CSS, MDX
+- **Frontend**: React, JavaScript, HTML, CSS
 - **Backend**: Tauri (Rust-based framework)
 - **Storage**: Local file system
 - **Markdown Processing**: Node.js
@@ -44,7 +44,13 @@ This project is currently in early development. The initial focus is on building
 
 ## Installation
 
-*Coming soon*
+**Start the development server**:
+
+```bash
+cd rememberIt
+npm install
+npm run tauri dev
+```
 
 ## Contributing
 

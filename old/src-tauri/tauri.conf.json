@@ -31,17 +31,5 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ]
-  }, 
-   "plugins": {
-    "cli": {
-      "description": "Command line interface for the journaling app",
-      "args": [
-        {
-          "name": "file",
-          "description": "Path to the file to open",
-          "takesValue": true
-        }
-      ]
-    }
-   }  
+  }
 }

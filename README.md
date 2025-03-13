@@ -52,6 +52,12 @@ npm install
 npm run tauri dev
 ```
 
+**Testing with custom files**:
+
+```bash
+pnpm tauri dev -- -- --file <file-name>
+```
+
 ## Contributing
 
 *Coming soon*

@@ -7,6 +7,12 @@
     text-align: center;
   }
   
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
   a {
     font-weight: 500;
     color: #646cff;

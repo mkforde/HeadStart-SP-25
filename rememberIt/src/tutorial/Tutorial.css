@@ -1,6 +1,5 @@
-  .container {
+  .tutorial {
     margin: 0;
-    padding-top: 10vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -50,8 +49,6 @@
     font-weight: bold;
     color: #396cd8;
   }
-
-  .close {}
 
   input,
   button {

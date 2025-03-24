@@ -89,7 +89,7 @@ function Slideshow() {
 function Tutorial() {
 
   return (
-    <main className="container">
+    <main className="tutorial">
       <h1>Welcome to RememberIt</h1>
 
       <div className="overlay">

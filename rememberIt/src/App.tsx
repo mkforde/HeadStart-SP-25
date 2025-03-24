@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import Tutorial from "./tutorial/Tutorial";
+import RegularEditor from "./editor/RegularEditor";
 
 function App() {
 
@@ -24,12 +25,12 @@ function App() {
 
   return (
     <main className="container">
-      {showTutorial ? 
-      <div className="welcome-screen">
-        <ExitButton />
-        <Tutorial />
-      </div>
-       : null}
+      {showTutorial ?
+        <div className="welcome-screen">
+          <ExitButton />
+          <Tutorial />
+        </div>
+        : <RegularEditor textContent={"textfile"} />}
     </main>
   );
 }

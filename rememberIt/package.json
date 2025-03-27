@@ -10,13 +10,16 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.0.17",
     "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-dialog": "~2.2.0",
     "@tauri-apps/plugin-opener": "^2",
     "@tiptap/pm": "^2.11.5",
     "@tiptap/react": "^2.11.5",
     "@tiptap/starter-kit": "^2.11.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "tailwindcss": "^4.0.17",
     "tiptap-markdown": "^0.8.10"
   },
   "devDependencies": {

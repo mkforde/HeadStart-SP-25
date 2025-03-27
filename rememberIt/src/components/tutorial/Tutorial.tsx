@@ -27,6 +27,10 @@ const welcome: Slide[] = [
     img: 'https://placehold.co/600x400/EEE/31343C',
     description: 'Plugin extensible',
   },
+  {
+    img: 'https://placehold.co/600x400/EEE/31343C',
+    description: 'Another slide',
+  },
 ]
 
 function Slideshow() {
@@ -57,45 +61,30 @@ function Slideshow() {
     <main className="slideshow">
       <img src={welcome[slide].img} alt="" />
       <p className="description">{welcome[slide].description}</p>
-      <div className="pagination">
         <div className="pagination">
           <button onClick={decrement}>&lt;</button>
-          <button
-            className={slide === 0 ? "active" : ""}
-            onClick={() => setPage(0)}
-          >1</button>
-          <button
-            className={slide === 1 ? "active" : ""}
-            onClick={() => setPage(1)}
-          >2</button>
-          <button
-            className={slide === 2 ? "active" : ""}
-            onClick={() => setPage(2)}
-          >3</button>
-          <button
-            className={slide === 3 ? "active" : ""}
-            onClick={() => setPage(3)}
-          >4</button>
-          <button className={slide === 4 ? "active" : ""} onClick={() => setPage(4)}>5</button>
+          
+          {
+            welcome.map((_item, index) => {
+              return <button key={index} className={slide === index ? "active" : ""}
+              onClick={() => setPage(index)}>{index + 1}</button>
+            })
+          }
+
           <button onClick={increment}>&gt;</button>
-        </div>
       </div>
     </main>
   );
 }
-
-
 
 function Tutorial() {
 
   return (
     <main className="tutorial">
       <h1>Welcome to RememberIt</h1>
-
-      <div className="overlay">
-        <Slideshow></Slideshow>
+      <div className="overlay flex justify-center">
+        <Slideshow />
       </div>
-
     </main>
   );
 }

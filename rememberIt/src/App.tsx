@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./App.css";
-import Tutorial from "./tutorial/Tutorial";
-import RegularEditor from "./editor/RegularEditor";
+import Tutorial from "./components/tutorial/Tutorial";
+import RegularEditor from "./components/editor/RegularEditor";
 
 function App() {
 
@@ -11,26 +11,20 @@ function App() {
     setShowTutorial(!showTutorial)
   }
 
-
   function ExitButton() {
     return (
-      <div className="exit">
-        <button onClick={toggleTutorial} className="close">X</button>
-      </div>
+      <button onClick={toggleTutorial} className="ml-auto rounded-md p-2 bg-gray-100">X</button>
     );
   }
 
-
-
-
   return (
-    <main className="container">
+    <main className="container mt-10">
       {showTutorial ?
-        <div className="welcome-screen">
+        <div className="welcome-screen flex flex-col">
           <ExitButton />
           <Tutorial />
         </div>
-        : <RegularEditor textContent={"textfile"} />}
+        : <RegularEditor />}
     </main>
   );
 }

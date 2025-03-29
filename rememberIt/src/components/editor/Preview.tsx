@@ -7,7 +7,7 @@ interface PreviewProps {
 function Preview({ markdown }: PreviewProps) {
   const MarkdownComponent = ReactMarkdown as any;
   return (
-    <div className="h-screen bg-gray p-6">
+    <div className="h-screen p-6">
       <MarkdownComponent>{markdown}</MarkdownComponent>
     </div>
   );

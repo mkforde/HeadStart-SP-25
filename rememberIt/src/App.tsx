@@ -1,9 +1,6 @@
 import { useState } from "react";
 import "./App.css";
 import Tutorial from "./components/tutorial/Tutorial";
-import Editor from "./components/editor/Editor";
-import { Allotment } from "allotment";
-import Preview from "./components/editor/Preview";
 import EditorWithPreview from "./components/editor/EditorWithPreview";
 
 function App() {

@@ -9,8 +9,7 @@
     "core:default",
     "opener:default",
     "dialog:default",
-    "dialog:default",
     "fs:default",
-    "fs:default"
+    "fs:allow-appdata-write-recursive"
   ]
 }

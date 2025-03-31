@@ -1,8 +1,9 @@
 @import "allotment/dist/style.css";
 @import "@mdxeditor/editor/style.css";
 @import "tailwindcss";
+
 @plugin "daisyui" {
-  themes: light --default, light --prefersdark;
+  themes: light --default, dark --prefersdark;
 }
 
 /* Bring back headers */
@@ -10,6 +11,7 @@
   h1 {
     font-size: var(--text-2xl);
   }
+
   h2 {
     font-size: var(--text-xl);
   }

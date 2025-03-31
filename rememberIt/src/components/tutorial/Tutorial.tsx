@@ -1,4 +1,5 @@
 import { Slideshow, type Slide } from "../common/Slideshow";
+import { type UserSettings } from "../../settings/settings";
 
 const welcomeSlides: Slide[] = [
   {
@@ -23,9 +24,21 @@ const welcomeSlides: Slide[] = [
   },
 ];
 
-function Tutorial() {
+interface TutorialProps {
+  settings: UserSettings;
+  onSettingsChange: (settings: UserSettings) => void;
+}
+
+function Tutorial({ settings, onSettingsChange }: TutorialProps) {
+  const handleHideTutorialChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onSettingsChange({
+      ...settings,
+      hideTutorial: e.target.checked
+    });
+  };
+
   return (
-    <div className="welcome-screen min-h-screen flex flex-col items-center justify-center p-4 bg-base-100">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-base-300">
       <div className="w-full max-w-4xl space-y-8">
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold">Welcome to RememberIt</h1>
@@ -33,9 +46,22 @@ function Tutorial() {
             Let's take a quick tour of your new journaling companion
           </p>
         </div>
-        
+
         <div className="transform hover:scale-[1.02] transition-transform duration-300">
-          <Slideshow slides={welcomeSlides} />
+          <Slideshow className="bg-accent-content" slides={welcomeSlides} />
+        </div>
+
+        {/* Hide tutorial checkbox */}
+        <div className="form-control">
+          <label className="flex label cursor-pointer justify-center">
+            <span className="label-text mr-2">Don't show this tutorial again</span>
+            <input
+              type="checkbox"
+              className="checkbox"
+              checked={settings.hideTutorial}
+              onChange={handleHideTutorialChange}
+            />
+          </label>
         </div>
       </div>
     </div>

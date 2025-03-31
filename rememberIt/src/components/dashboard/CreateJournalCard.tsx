@@ -29,7 +29,7 @@ function CreateJournalCard({ onJournalCreate }: CreateJournalCardProps) {
             <div className="card hover- card-dash bg-neutral-content shadow-2xl w-36 h-48">
                 <div className="card-body">
                     <button
-                        className="card-title"
+                        className="card-title text-neutral"
                         onClick={() => {
                             const modal = document.getElementById('create_journal_modal') as HTMLDialogElement;
                             modal?.showModal();
@@ -37,7 +37,7 @@ function CreateJournalCard({ onJournalCreate }: CreateJournalCardProps) {
                     >
                         +
                     </button>
-                    <p className="font-thin">Create a new journal</p>
+                    <p className="font-thin text-neutral">Create a new journal</p>
                 </div>
             </div>
             <CreateJournalModal

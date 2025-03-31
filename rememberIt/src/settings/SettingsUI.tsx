@@ -1,4 +1,7 @@
 import { type UserSettings } from './settings';
+import { open } from "@tauri-apps/plugin-dialog";
+import { getWorkspaceHistory, addWorkspaceToHistory } from './workspaceHistory';
+import { useState, useEffect } from 'react';
 
 interface SettingsUIProps {
     isOpen: boolean;
@@ -8,11 +11,45 @@ interface SettingsUIProps {
 }
 
 export default function SettingsUI({ isOpen, onClose, settings, onSettingsChange }: SettingsUIProps) {
-    const handleChange = (key: keyof UserSettings, value: string | boolean) => {
+    const [recentWorkspaces, setRecentWorkspaces] = useState<string[]>([]);
+
+    useEffect(() => {
+        // Load workspace history when component mounts
+        loadWorkspaceHistory();
+    }, []);
+
+    const loadWorkspaceHistory = async () => {
+        const history = await getWorkspaceHistory();
+        setRecentWorkspaces(history.recentWorkspaces);
+    };
+
+    const handleChange = async (key: keyof UserSettings, value: string | boolean) => {
+        if (key === 'workspacePath') {
+            // Add the new workspace to history when it changes
+            await addWorkspaceToHistory(value as string);
+            await loadWorkspaceHistory(); // Reload the history
+        }
         onSettingsChange({
             ...settings,
             [key]: value
         });
+    };
+
+    const handleWorkspaceSelect = async () => {
+        try {
+            const selected = await open({
+                directory: true,
+                multiple: false,
+                defaultPath: settings.workspacePath
+            });
+
+            if (selected) {
+                const workspacePath = selected as string;
+                await handleChange('workspacePath', workspacePath);
+            }
+        } catch (error) {
+            console.error('Error selecting workspace:', error);
+        }
     };
 
     return (
@@ -30,17 +67,36 @@ export default function SettingsUI({ isOpen, onClose, settings, onSettingsChange
 
                     {/* Settings form */}
                     <div className="form-control flex flex-col gap-4">
-                        {/* Workspace Path */}
+                        {/* Workspace Section */}
                         <div>
                             <label className="label">
                                 <span className="label-text">Workspace Path</span>
                             </label>
-                            <input
-                                type="text"
-                                className="input input-bordered w-full"
-                                value={settings.workspacePath}
-                                onChange={(e) => handleChange('workspacePath', e.target.value)}
-                            />
+                            <div className="flex flex-col gap-2">
+                                {/* Workspace Dropdown */}
+                                <select
+                                    className="select select-bordered w-full"
+                                    value={settings.workspacePath}
+                                    onChange={(e) => handleChange('workspacePath', e.target.value)}
+                                >
+                                    <option value={settings.workspacePath}>{settings.workspacePath}</option>
+                                    {recentWorkspaces
+                                        .filter(path => path !== settings.workspacePath)
+                                        .map((path, index) => (
+                                            <option key={index} value={path}>
+                                                {path}
+                                            </option>
+                                        ))}
+                                </select>
+
+                                {/* Browse Button */}
+                                <button
+                                    className="btn btn-outline btn-sm"
+                                    onClick={handleWorkspaceSelect}
+                                >
+                                    Browse...
+                                </button>
+                            </div>
                         </div>
 
                         {/* Theme */}

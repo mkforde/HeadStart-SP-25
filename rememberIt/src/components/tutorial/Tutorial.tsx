@@ -1,7 +1,10 @@
 import { Slideshow, type Slide } from "../common/Slideshow";
 import { type UserSettings } from "../../settings/settings";
+import { open } from "@tauri-apps/plugin-dialog";
+import { useState } from "react";
+import { addWorkspaceToHistory } from "../../settings/workspaceHistory";
 
-const welcomeSlides: Slide[] = [
+const tutorialSlides: Slide[] = [
   {
     img: "https://placehold.co/600x400/EEE/31343C",
     description: "Welcome to RememberIt - Your Modern Journaling Companion",
@@ -27,9 +30,52 @@ const welcomeSlides: Slide[] = [
 interface TutorialProps {
   settings: UserSettings;
   onSettingsChange: (settings: UserSettings) => void;
+  onComplete: () => void;
+  isFirstTime: boolean;
 }
 
-function Tutorial({ settings, onSettingsChange }: TutorialProps) {
+function Tutorial({ settings, onSettingsChange, onComplete, isFirstTime }: TutorialProps) {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isSelectingWorkspace, setIsSelectingWorkspace] = useState(false);
+
+  const handleWorkspaceSelect = async () => {
+    setIsSelectingWorkspace(true);
+    try {
+      const selected = await open({
+        directory: true,
+        multiple: false,
+        defaultPath: settings.workspacePath
+      });
+
+      if (selected) {
+        const workspacePath = selected as string;
+        await addWorkspaceToHistory(workspacePath);
+        onSettingsChange({
+          ...settings,
+          workspacePath
+        });
+      }
+    } catch (error) {
+      console.error('Error selecting workspace:', error);
+    } finally {
+      setIsSelectingWorkspace(false);
+    }
+  };
+
+  const handleThemeChange = (theme: string) => {
+    onSettingsChange({
+      ...settings,
+      theme
+    });
+  };
+
+  const handleColorChange = (color: string) => {
+    onSettingsChange({
+      ...settings,
+      defaultJournalColor: color
+    });
+  };
+
   const handleHideTutorialChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onSettingsChange({
       ...settings,
@@ -37,32 +83,167 @@ function Tutorial({ settings, onSettingsChange }: TutorialProps) {
     });
   };
 
+  const handleNext = async () => {
+    if (currentStep === 0) {
+      // Add current workspace to history before proceeding
+      await addWorkspaceToHistory(settings.workspacePath);
+    }
+    setCurrentStep(currentStep + 1);
+  };
+
+  const renderSetupForm = () => {
+    switch (currentStep) {
+      case 0:
+        return (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-center">Choose Your Workspace</h2>
+            <p className="text-center text-base-content/80">
+              Select where you want to store your journals
+            </p>
+            <div className="flex flex-col items-center gap-4">
+              <input
+                type="text"
+                className="input input-bordered w-full max-w-md"
+                value={settings.workspacePath}
+                readOnly
+              />
+              <div className="flex gap-2">
+                <button
+                  className="btn btn-primary"
+                  onClick={handleWorkspaceSelect}
+                  disabled={isSelectingWorkspace}
+                >
+                  {isSelectingWorkspace ? 'Selecting...' : 'Browse...'}
+                </button>
+                <button
+                  className="btn btn-primary"
+                  onClick={handleNext}
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      case 1:
+        return (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-center">Customize Your Experience</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="label">
+                  <span className="label-text">Theme</span>
+                </label>
+                <select
+                  className="select select-bordered w-full"
+                  value={settings.theme}
+                  onChange={(e) => handleThemeChange(e.target.value)}
+                >
+                  <option value="light">Light</option>
+                  <option value="dark">Dark</option>
+                </select>
+              </div>
+              <div>
+                <label className="label">
+                  <span className="label-text">Default Journal Color</span>
+                </label>
+                <select
+                  className="select select-bordered w-full"
+                  value={settings.defaultJournalColor}
+                  onChange={(e) => handleColorChange(e.target.value)}
+                >
+                  <option value="primary">Primary</option>
+                  <option value="secondary">Secondary</option>
+                  <option value="accent">Accent</option>
+                  <option value="neutral">Neutral</option>
+                  <option value="base-100">Base 100</option>
+                  <option value="base-200">Base 200</option>
+                  <option value="base-300">Base 300</option>
+                </select>
+              </div>
+            </div>
+            <div className="flex justify-between mt-6">
+              <button
+                className="btn btn-ghost"
+                onClick={() => setCurrentStep(0)}
+              >
+                Back
+              </button>
+              <button
+                className="btn btn-primary"
+                onClick={handleNext}
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        );
+      case 2:
+        return (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-center">Almost Done!</h2>
+            <div className="form-control">
+              <label className="label cursor-pointer">
+                <span className="label-text">Don't show this tutorial again</span>
+                <input
+                  type="checkbox"
+                  className="checkbox"
+                  checked={settings.hideTutorial}
+                  onChange={handleHideTutorialChange}
+                />
+              </label>
+            </div>
+            <div className="flex justify-between mt-6">
+              <button
+                className="btn btn-ghost"
+                onClick={() => setCurrentStep(1)}
+              >
+                Back
+              </button>
+              <button
+                className="btn btn-primary"
+                onClick={onComplete}
+              >
+                Start Journaling
+              </button>
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-base-300">
       <div className="w-full max-w-4xl space-y-8">
-        <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold">Welcome to RememberIt</h1>
-          <p className="text-lg text-base-content/80">
-            Let's take a quick tour of your new journaling companion
-          </p>
-        </div>
-
         <div className="transform hover:scale-[1.02] transition-transform duration-300">
-          <Slideshow className="bg-accent-content" slides={welcomeSlides} />
+          <Slideshow className="bg-accent-content" slides={tutorialSlides} />
         </div>
 
-        {/* Hide tutorial checkbox */}
-        <div className="form-control">
-          <label className="flex label cursor-pointer justify-center">
-            <span className="label-text mr-2">Don't show this tutorial again</span>
-            <input
-              type="checkbox"
-              className="checkbox"
-              checked={settings.hideTutorial}
-              onChange={handleHideTutorialChange}
-            />
-          </label>
-        </div>
+        {isFirstTime ? (
+          renderSetupForm()
+        ) : (
+          <div className="flex flex-col items-center gap-4">
+            <div className="form-control">
+              <label className="label cursor-pointer">
+                <span className="label-text">Don't show this tutorial again</span>
+                <input
+                  type="checkbox"
+                  className="checkbox"
+                  checked={settings.hideTutorial}
+                  onChange={handleHideTutorialChange}
+                />
+              </label>
+            </div>
+            <button
+              className="btn btn-primary"
+              onClick={onComplete}
+            >
+              Start Journaling
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

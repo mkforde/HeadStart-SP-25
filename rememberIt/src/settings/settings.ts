@@ -1,4 +1,6 @@
 import { exists, BaseDirectory, readTextFile, writeTextFile, mkdir } from '@tauri-apps/plugin-fs';
+import { getWorkspaceHistory } from './workspaceHistory';
+
 
 export interface UserSettings {
     workspacePath: string;
@@ -27,6 +29,54 @@ export async function saveSettings(settings: UserSettings): Promise<void> {
     } catch (error) {
         console.error('Error saving settings:', error);
         throw error;
+    }
+}
+
+export async function isSetupValid(): Promise<boolean> {
+    try {
+        // Check if settings file exists and is valid
+        const settingsExists = await exists('settings.json', {
+            baseDir: BaseDirectory.AppData,
+        });
+
+        if (!settingsExists) {
+            return false;
+        }
+
+        // Read and validate settings file contents
+        const settingsContents = await readTextFile('settings.json', {
+            baseDir: BaseDirectory.AppData,
+        });
+
+        try {
+            const settings = JSON.parse(settingsContents);
+            // Validate that all required fields from UserSettings interface exist and have correct types
+            const requiredFields: (keyof UserSettings)[] = Object.keys(defaultSettings) as (keyof UserSettings)[];
+            for (const field of requiredFields) {
+                if (!(field in settings) || typeof settings[field] !== typeof defaultSettings[field]) {
+                    return false;
+                }
+            }
+        } catch (e) {
+            console.error('Invalid settings file format:', e);
+            return false;
+        }
+
+        // Check if workspace history exists and has valid entries
+        const workspaceHistory = await getWorkspaceHistory();
+        if (!workspaceHistory.recentWorkspaces || !Array.isArray(workspaceHistory.recentWorkspaces) || workspaceHistory.recentWorkspaces.length === 0) {
+            return false;
+        }
+
+        // Validate each workspace path
+        for (const path of workspaceHistory.recentWorkspaces) {
+            if (!path || typeof path !== 'string') return false;
+        }
+
+        return true;
+    } catch (error) {
+        console.error('Error checking setup validity:', error);
+        return false;
     }
 }
 

@@ -73,10 +73,10 @@ function Dashboard({ settings, onSettingsChange }: DashboardProps) {
 
                 {/* Journals Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                    <CreateJournalCard onJournalCreate={handleNewJournal} />
                     {journals.map((journal) => (
                         <JournalCard key={journal.id} {...journal} />
                     ))}
-                    <CreateJournalCard onJournalCreate={handleNewJournal} />
                 </div>
             </div>
 

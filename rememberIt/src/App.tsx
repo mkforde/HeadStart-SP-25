@@ -3,19 +3,27 @@ import "./App.css";
 import Tutorial from "./components/tutorial/Tutorial";
 import EditorWithPreview from "./components/editor/EditorWithPreview";
 import Dashboard from "./components/dashboard/Dashboard";
-import { initializeSettings, saveSettings, type UserSettings } from "./settings/settings";
+import { initializeSettings, saveSettings, type UserSettings, isSetupValid } from "./settings/settings";
 
 function App() {
   const [showTutorial, setShowTutorial] = useState(true);
   const [settings, setSettings] = useState<UserSettings | null>(null);
+  const [isFirstTime, setIsFirstTime] = useState(true);
 
   // Initialize settings
   useEffect(() => {
     const init = async () => {
       const initializedSettings = await initializeSettings();
       setSettings(initializedSettings);
-      // Check if tutorial should be shown
-      if (initializedSettings.hideTutorial) {
+
+      // Check if setup is valid
+      const setupValid = await isSetupValid();
+      setIsFirstTime(!setupValid);
+
+      // Only show tutorial if it's first time or if user hasn't hidden it
+      if (!setupValid || !initializedSettings.hideTutorial) {
+        setShowTutorial(true);
+      } else {
         setShowTutorial(false);
       }
     };
@@ -52,8 +60,13 @@ function App() {
     <main className="w-full h-screen">
       {showTutorial ? (
         <div className="welcome-screen flex flex-col">
-          <ExitButton />
-          <Tutorial settings={settings} onSettingsChange={handleSettingsChange} />
+          {!isFirstTime && <ExitButton />}
+          <Tutorial
+            settings={settings}
+            onSettingsChange={handleSettingsChange}
+            onComplete={() => setShowTutorial(false)}
+            isFirstTime={isFirstTime}
+          />
         </div>
       ) : (
         <div className="w-full h-full">

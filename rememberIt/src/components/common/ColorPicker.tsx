@@ -7,7 +7,7 @@ interface ColorPickerProps {
     className?: string;
 }
 
-export default function ColorPicker({ selectedColor, onColorChange, label, className = '' }: ColorPickerProps) {
+export default function ColorPicker({ selectedColor, onColorChange, className = '' }: ColorPickerProps) {
     return (
         <div className={`dropdown w-full ${className}`}>
             <div tabIndex={0} role="button" className="btn btn-bordered w-full">

@@ -1,8 +1,10 @@
 import CreateJournalCard from "./CreateJournalCard";
-import JournalCard, { type Journal } from "./JournalCard";
+import JournalCard from "./JournalCard";
+import { type Journal } from "../../journal/journal";
 import { useState, useEffect } from "react";
 import SettingsUI from "../../settings/SettingsUI";
 import { type UserSettings } from "../../settings/settings";
+import { getJournals, createJournal } from "../../journal/journalFS";
 
 interface DashboardProps {
     settings: UserSettings;
@@ -10,40 +12,35 @@ interface DashboardProps {
 }
 
 function Dashboard({ settings, onSettingsChange }: DashboardProps) {
-    const [journals, setJournals] = useState<Journal[]>([
-        {
-            "name": "Daily",
-            "color": "yellow",
-            "description": "Journal your daily life!",
-            createdAt: new Date().toISOString(),
-            lastModified: new Date().toISOString(),
-            id: "1"
-        },
-        {
-            "name": "Life",
-            "color": "blue",
-            "description": "Journal your academic journey",
-            createdAt: new Date().toISOString(),
-            lastModified: new Date().toISOString(),
-            id: "2"
-        },
-    ]);
-
+    const [journals, setJournals] = useState<Journal[]>([]);
     const [showSettings, setShowSettings] = useState(false);
+
+    // Load journals from workspace
+    useEffect(() => {
+        const loadJournals = async () => {
+            try {
+                const loadedJournals = await getJournals(settings.workspacePath);
+                setJournals(loadedJournals);
+            } catch (error) {
+                console.error('Error loading journals:', error);
+            }
+        };
+        loadJournals();
+    }, [settings.workspacePath]);
 
     // Apply theme changes
     useEffect(() => {
         document.documentElement.setAttribute('data-theme', settings.theme);
     }, [settings.theme]);
 
-    const handleNewJournal = (newJournal: Omit<Journal, 'id' | 'createdAt' | 'lastModified'>) => {
-        const journal: Journal = {
-            ...newJournal,
-            id: Date.now().toString(),
-            createdAt: new Date().toISOString(),
-            lastModified: new Date().toISOString(),
-        };
-        setJournals(prev => [...prev, journal]);
+    const handleNewJournal = async (newJournal: Omit<Journal, 'id' | 'createdAt' | 'lastModified'>) => {
+        try {
+            const journal = await createJournal(settings.workspacePath, newJournal);
+            setJournals(prev => [...prev, journal]);
+        } catch (error) {
+            console.error('Error creating journal:', error);
+            // TODO: Show error toast to user
+        }
     };
 
     return (
@@ -73,7 +70,11 @@ function Dashboard({ settings, onSettingsChange }: DashboardProps) {
 
                 {/* Journals Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                    <CreateJournalCard onJournalCreate={handleNewJournal} />
+                    <CreateJournalCard
+                        onJournalCreate={handleNewJournal}
+                        settings={settings}
+                        onSettingsChange={onSettingsChange}
+                    />
                     {journals.map((journal) => (
                         <JournalCard key={journal.id} {...journal} />
                     ))}

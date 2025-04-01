@@ -1,16 +1,29 @@
-import { useState } from "react";
-import { type Journal } from "./JournalCard";
+import { useState, useEffect } from "react";
+import { type Journal, themeColors, type ThemeColor } from "../../journal/journal";
+import { getSettings } from "../../settings/settings";
+import ColorPicker from "../common/ColorPicker";
+import { type UserSettings } from "../../settings/settings";
 
 interface CreateJournalCardProps {
     onJournalCreate: (journal: Omit<Journal, 'id' | 'createdAt' | 'lastModified'>) => void;
+    settings: UserSettings;
+    onSettingsChange: (settings: UserSettings) => void;
 }
 
-function CreateJournalCard({ onJournalCreate }: CreateJournalCardProps) {
+function CreateJournalCard({ onJournalCreate, settings }: CreateJournalCardProps) {
     const [formData, setFormData] = useState({
         name: "",
-        description: "A new journal for your thoughts and ideas...",
-        color: "yellow"
+        description: "A new journal for your thoughts",
+        color: settings.defaultJournalColor as ThemeColor
     });
+
+    // Update form data when settings change
+    useEffect(() => {
+        setFormData(prev => ({
+            ...prev,
+            color: settings.defaultJournalColor as ThemeColor
+        }));
+    }, [settings.defaultJournalColor]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -18,7 +31,7 @@ function CreateJournalCard({ onJournalCreate }: CreateJournalCardProps) {
         setFormData({
             name: "",
             description: "A new journal for your thoughts",
-            color: "yellow"
+            color: settings.defaultJournalColor as ThemeColor
         });
         const modal = document.getElementById('create_journal_modal') as HTMLDialogElement;
         modal?.close();
@@ -53,13 +66,17 @@ interface CreateJournalModalProps {
     formData: {
         name: string;
         description: string;
-        color: string;
+        color: ThemeColor;
     };
     setFormData: (data: any) => void;
     onSubmit: (e: React.FormEvent) => void;
 }
 
 function CreateJournalModal({ formData, setFormData, onSubmit }: CreateJournalModalProps) {
+    const handleColorChange = (color: string) => {
+        setFormData({ ...formData, color: color as ThemeColor });
+    };
+
     return (
         <dialog id="create_journal_modal" className="modal">
             <div className="modal-box">
@@ -96,18 +113,14 @@ function CreateJournalModal({ formData, setFormData, onSubmit }: CreateJournalMo
                     <div className="form-control w-full mt-4">
                         <label className="label">
                             <span className="label-text">Color Theme</span>
+                            <span className="text-info">- this color changes with the theme</span>
                         </label>
-                        <select
-                            className="select select-bordered w-full"
-                            value={formData.color}
-                            onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-                        >
-                            <option value="yellow">Yellow</option>
-                            <option value="blue">Blue</option>
-                            <option value="green">Green</option>
-                            <option value="purple">Purple</option>
-                            <option value="pink">Pink</option>
-                        </select>
+                        <div onClick={(e) => e.preventDefault()}>
+                            <ColorPicker
+                                selectedColor={formData.color}
+                                onColorChange={handleColorChange}
+                            />
+                        </div>
                     </div>
                     <div className="modal-action">
                         <button type="button" className="btn btn-ghost" onClick={() => {

@@ -1,5 +1,7 @@
 # rememberIT - Markdown Journaling App
 
+![Logo](./rememberIt/src-tauri/icons/Square89x89Logo.png)
+
 ## Overview
 
 rememberIt is a minimalist journaling application that combines the power of markdown with a distraction-free writing environment. Write in markdown and see your journal entries beautifully formatted in real-time.

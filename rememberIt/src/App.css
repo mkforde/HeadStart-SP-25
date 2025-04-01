@@ -3,7 +3,7 @@
 @import "tailwindcss";
 
 @plugin "daisyui" {
-  themes: light --default, dark --prefersdark;
+  themes: all;
 }
 
 /* Bring back headers */

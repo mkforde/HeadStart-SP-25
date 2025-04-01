@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { type Journal, themeColors, type ThemeColor } from "../../journal/journal";
-import { getSettings } from "../../settings/settings";
+import { type Journal } from "../../journal/journal";
+import { type ThemeColor } from "../../colors";
 import ColorPicker from "../common/ColorPicker";
 import { type UserSettings } from "../../settings/settings";
 

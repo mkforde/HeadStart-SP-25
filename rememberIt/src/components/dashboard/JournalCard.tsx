@@ -1,5 +1,5 @@
-import { type Journal, type ThemeColor } from "../../journal/journal";
-import { getJournalColorClass } from "../../journal/journal";
+import { type Journal } from "../../journal/journal";
+import { getJournalColorClass, ThemeColor } from "../../colors";
 
 function JournalCard({ name, color, description }: Journal) {
     return (

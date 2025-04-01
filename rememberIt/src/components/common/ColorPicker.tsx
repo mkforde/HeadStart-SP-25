@@ -1,4 +1,4 @@
-import { themeColors, getColorSwatchClass } from '../../journal/journal'
+import { themeColors, getColorSwatchClass } from '../../colors'
 
 interface ColorPickerProps {
     selectedColor: string;

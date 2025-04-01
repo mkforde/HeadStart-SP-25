@@ -1,9 +1,10 @@
 import { Slideshow, type Slide } from "../common/Slideshow";
 import { type UserSettings } from "../../settings/settings";
 import { open } from "@tauri-apps/plugin-dialog";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { addWorkspaceToHistory } from "../../settings/workspaceHistory";
 import ColorPicker from "../common/ColorPicker";
+import ThemePicker from "../common/ThemePicker";
 
 const tutorialSlides: Slide[] = [
   {
@@ -38,6 +39,11 @@ interface TutorialProps {
 function Tutorial({ settings, onSettingsChange, onComplete, isFirstTime }: TutorialProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSelectingWorkspace, setIsSelectingWorkspace] = useState(false);
+
+  // Apply theme changes
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', settings.theme);
+  }, [settings.theme]);
 
   const handleWorkspaceSelect = async () => {
     setIsSelectingWorkspace(true);
@@ -135,14 +141,10 @@ function Tutorial({ settings, onSettingsChange, onComplete, isFirstTime }: Tutor
                 <label className="label">
                   <span className="label-text">Theme</span>
                 </label>
-                <select
-                  className="select select-bordered w-full"
-                  value={settings.theme}
-                  onChange={(e) => handleThemeChange(e.target.value)}
-                >
-                  <option value="light">Light</option>
-                  <option value="dark">Dark</option>
-                </select>
+                <ThemePicker
+                  selectedTheme={settings.theme}
+                  onThemeChange={(theme) => handleThemeChange(theme)}
+                />
               </div>
               <div>
                 <label className="label">

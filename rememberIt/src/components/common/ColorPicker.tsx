@@ -1,4 +1,4 @@
-import { themeColors } from '../../journal/journal'
+import { themeColors, getColorSwatchClass } from '../../journal/journal'
 
 interface ColorPickerProps {
     selectedColor: string;
@@ -12,7 +12,7 @@ export default function ColorPicker({ selectedColor, onColorChange, label, class
         <div className={`dropdown w-full ${className}`}>
             <div tabIndex={0} role="button" className="btn btn-bordered w-full">
                 <div className="flex items-center gap-2">
-                    <div className={`w-4 h-4 rounded-full bg-${selectedColor}`}></div>
+                    <div className={`w-4 h-4 rounded-full ${getColorSwatchClass(selectedColor as any)}`}></div>
                     <span>{themeColors.find(c => c.name === selectedColor)?.label}</span>
                 </div>
                 <svg
@@ -31,7 +31,7 @@ export default function ColorPicker({ selectedColor, onColorChange, label, class
                             className="btn btn-ghost justify-start gap-2"
                             onClick={() => onColorChange(color.name)}
                         >
-                            <div className={`w-4 h-4 rounded-full bg-${color.name}`}></div>
+                            <div className={`w-4 h-4 rounded-full ${getColorSwatchClass(color.name)}`}></div>
                             <span>{color.label}</span>
                         </button>
                     </li>

@@ -3,6 +3,7 @@ import { type UserSettings } from "../../settings/settings";
 import { open } from "@tauri-apps/plugin-dialog";
 import { useState } from "react";
 import { addWorkspaceToHistory } from "../../settings/workspaceHistory";
+import ColorPicker from "../common/ColorPicker";
 
 const tutorialSlides: Slide[] = [
   {
@@ -146,20 +147,12 @@ function Tutorial({ settings, onSettingsChange, onComplete, isFirstTime }: Tutor
               <div>
                 <label className="label">
                   <span className="label-text">Default Journal Color</span>
+                  <span className="text-info">- depends on theme</span>
                 </label>
-                <select
-                  className="select select-bordered w-full"
-                  value={settings.defaultJournalColor}
-                  onChange={(e) => handleColorChange(e.target.value)}
-                >
-                  <option value="primary">Primary</option>
-                  <option value="secondary">Secondary</option>
-                  <option value="accent">Accent</option>
-                  <option value="neutral">Neutral</option>
-                  <option value="base-100">Base 100</option>
-                  <option value="base-200">Base 200</option>
-                  <option value="base-300">Base 300</option>
-                </select>
+                <ColorPicker
+                  selectedColor={settings.defaultJournalColor}
+                  onColorChange={(color) => handleColorChange(color)}
+                />
               </div>
             </div>
             <div className="flex justify-between mt-6">
@@ -180,7 +173,7 @@ function Tutorial({ settings, onSettingsChange, onComplete, isFirstTime }: Tutor
         );
       case 2:
         return (
-          <div className="space-y-6">
+          <div className="space-y-6 flex flex-col text-center">
             <h2 className="text-2xl font-bold text-center">Almost Done!</h2>
             <div className="form-control">
               <label className="label cursor-pointer">
@@ -224,7 +217,7 @@ function Tutorial({ settings, onSettingsChange, onComplete, isFirstTime }: Tutor
         {isFirstTime ? (
           renderSetupForm()
         ) : (
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-col justify-center items-center gap-4">
             <div className="form-control">
               <label className="label cursor-pointer">
                 <span className="label-text">Don't show this tutorial again</span>

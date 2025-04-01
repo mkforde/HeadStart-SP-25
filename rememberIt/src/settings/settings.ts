@@ -1,4 +1,5 @@
 import { exists, BaseDirectory, readTextFile, writeTextFile, mkdir } from '@tauri-apps/plugin-fs';
+import { documentDir } from '@tauri-apps/api/path';
 import { getWorkspaceHistory } from './workspaceHistory';
 
 
@@ -11,10 +12,10 @@ export interface UserSettings {
 }
 
 const defaultSettings: UserSettings = {
-    workspacePath: "~/Documents/rememberIt",
+    workspacePath: "",
     theme: "light",
     hideTutorial: false,
-    defaultJournalColor: "blue",
+    defaultJournalColor: "primary",
     lastOpenedJournal: "journal1"
 };
 
@@ -95,6 +96,10 @@ export async function initializeSettings(): Promise<UserSettings> {
             });
         }
 
+        // Get the document directory for the default workspace path
+        const docDir = await documentDir();
+        const defaultWorkspacePath = `${docDir}/rememberIt`;
+
         // Now check for the settings file
         const settingsExists = await exists('settings.json', {
             baseDir: BaseDirectory.AppData,
@@ -102,10 +107,14 @@ export async function initializeSettings(): Promise<UserSettings> {
 
         if (!settingsExists) {
             // Write default settings if file doesn't exist
-            await writeTextFile('settings.json', JSON.stringify(defaultSettings, null, 4), {
+            const initialSettings = {
+                ...defaultSettings,
+                workspacePath: defaultWorkspacePath
+            };
+            await writeTextFile('settings.json', JSON.stringify(initialSettings, null, 4), {
                 baseDir: BaseDirectory.AppData,
             });
-            currentSettings = defaultSettings;
+            currentSettings = initialSettings;
         } else {
             // Read existing settings
             const contents = await readTextFile('settings.json', {
@@ -117,8 +126,12 @@ export async function initializeSettings(): Promise<UserSettings> {
         return currentSettings;
     } catch (error) {
         console.error('Error initializing settings:', error);
-        // If anything fails, return default settings
-        currentSettings = defaultSettings;
+        // If anything fails, return default settings with document directory
+        const docDir = await documentDir();
+        currentSettings = {
+            ...defaultSettings,
+            workspacePath: `${docDir}/rememberIt`
+        };
         return currentSettings;
     }
 }

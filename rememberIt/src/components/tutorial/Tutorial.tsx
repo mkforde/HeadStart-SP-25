@@ -95,8 +95,15 @@ function Tutorial({
     });
   };
 
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onSettingsChange({
+      ...settings,
+      name: e.target.value,
+    });
+  };
+
   const handleNext = async () => {
-    if (currentStep === 0) {
+    if (currentStep === 2) {
       // Add current workspace to history before proceeding
       await addWorkspaceToHistory(settings.workspacePath);
     }
@@ -106,6 +113,68 @@ function Tutorial({
   const renderSetupForm = () => {
     switch (currentStep) {
       case 0:
+        return (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-center">
+              Welcome to RememberIt!
+            </h2>
+            <p className="text-center text-base-content/80">
+              Let's set up your workspace and preferences
+            </p>
+            <div className="flex justify-center">
+              <button className="btn btn-primary" onClick={handleNext}>
+                Start
+              </button>
+            </div>
+          </div>
+        );
+      case 1:
+        return (
+          <>
+            <h2 className="text-2xl font-bold text-center">
+              Set Your Display Name
+            </h2>
+            <div className="flex flex-col items-center gap-4">
+              <label className="input w-80 bg-base-200">
+                <svg
+                  className="h-[1em] opacity-50"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                >
+                  <g
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                    strokeWidth="2.5"
+                    fill="none"
+                    stroke="currentColor"
+                  >
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </g>
+                </svg>
+                <input
+                  type="text"
+                  pattern="[A-Za-z][A-Za-z0-9\-]*"
+                  placeholder={settings.name || "Enter your name"}
+                  onChange={(e) => handleNameChange(e)}
+                />
+              </label>
+
+              <div className="flex w-80 justify-between flex-row mt-4">
+                <button
+                  className="btn btn-ghost"
+                  onClick={() => setCurrentStep(0)}
+                >
+                  Back
+                </button>
+                <button className="btn btn-primary" onClick={handleNext}>
+                  Next
+                </button>
+              </div>
+            </div>
+          </>
+        );
+      case 2:
         return (
           <div className="space-y-6">
             <h2 className="text-2xl font-bold text-center">
@@ -124,7 +193,13 @@ function Tutorial({
                   readOnly
                 />
               </label>
-              <div className="flex gap-2">
+              <div className="flex gap-2 justify-between w-full max-w-md">
+                <button
+                  className="btn btn-ghost"
+                  onClick={() => setCurrentStep(1)}
+                >
+                  Back
+                </button>
                 <button
                   className="btn btn-primary"
                   onClick={handleWorkspaceSelect}
@@ -139,7 +214,7 @@ function Tutorial({
             </div>
           </div>
         );
-      case 1:
+      case 3:
         return (
           <div className="space-y-6">
             <h2 className="text-2xl font-bold text-center">
@@ -171,7 +246,7 @@ function Tutorial({
             <div className="flex justify-between mt-6">
               <button
                 className="btn btn-ghost"
-                onClick={() => setCurrentStep(0)}
+                onClick={() => setCurrentStep(2)}
               >
                 Back
               </button>
@@ -181,7 +256,7 @@ function Tutorial({
             </div>
           </div>
         );
-      case 2:
+      case 4:
         return (
           <div className="space-y-6 flex flex-col text-center">
             <h2 className="text-2xl font-bold text-center">Almost Done!</h2>

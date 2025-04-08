@@ -9,6 +9,7 @@ export interface UserSettings {
     hideTutorial: boolean;
     defaultJournalColor: string;
     lastOpenedJournal: string;
+    name: string;
 }
 
 const defaultSettings: UserSettings = {
@@ -16,7 +17,8 @@ const defaultSettings: UserSettings = {
     theme: "light",
     hideTutorial: false,
     defaultJournalColor: "primary",
-    lastOpenedJournal: "journal1"
+    lastOpenedJournal: "journal1",
+    name: "User",
 };
 
 let currentSettings: UserSettings;

@@ -4,6 +4,7 @@
 
 @plugin "daisyui" {
   themes: all;
+  exclude: rootscrollgutter;
 }
 
 /* Bring back headers */
@@ -14,5 +15,21 @@
 
   h2 {
     font-size: var(--text-xl);
+  }
+
+  body,
+  html {
+    margin: 0;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
   }
 }

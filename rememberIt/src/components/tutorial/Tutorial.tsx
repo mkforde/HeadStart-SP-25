@@ -36,13 +36,18 @@ interface TutorialProps {
   isFirstTime: boolean;
 }
 
-function Tutorial({ settings, onSettingsChange, onComplete, isFirstTime }: TutorialProps) {
+function Tutorial({
+  settings,
+  onSettingsChange,
+  onComplete,
+  isFirstTime,
+}: TutorialProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSelectingWorkspace, setIsSelectingWorkspace] = useState(false);
 
   // Apply theme changes
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', settings.theme);
+    document.documentElement.setAttribute("data-theme", settings.theme);
   }, [settings.theme]);
 
   const handleWorkspaceSelect = async () => {
@@ -51,7 +56,7 @@ function Tutorial({ settings, onSettingsChange, onComplete, isFirstTime }: Tutor
       const selected = await open({
         directory: true,
         multiple: false,
-        defaultPath: settings.workspacePath
+        defaultPath: settings.workspacePath,
       });
 
       if (selected) {
@@ -59,11 +64,11 @@ function Tutorial({ settings, onSettingsChange, onComplete, isFirstTime }: Tutor
         await addWorkspaceToHistory(workspacePath);
         onSettingsChange({
           ...settings,
-          workspacePath
+          workspacePath,
         });
       }
     } catch (error) {
-      console.error('Error selecting workspace:', error);
+      console.error("Error selecting workspace:", error);
     } finally {
       setIsSelectingWorkspace(false);
     }
@@ -72,21 +77,21 @@ function Tutorial({ settings, onSettingsChange, onComplete, isFirstTime }: Tutor
   const handleThemeChange = (theme: string) => {
     onSettingsChange({
       ...settings,
-      theme
+      theme,
     });
   };
 
   const handleColorChange = (color: string) => {
     onSettingsChange({
       ...settings,
-      defaultJournalColor: color
+      defaultJournalColor: color,
     });
   };
 
   const handleHideTutorialChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onSettingsChange({
       ...settings,
-      hideTutorial: e.target.checked
+      hideTutorial: e.target.checked,
     });
   };
 
@@ -103,29 +108,31 @@ function Tutorial({ settings, onSettingsChange, onComplete, isFirstTime }: Tutor
       case 0:
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-center">Choose Your Workspace</h2>
+            <h2 className="text-2xl font-bold text-center">
+              Choose Your Workspace
+            </h2>
             <p className="text-center text-base-content/80">
               Select where you want to store your journals
             </p>
             <div className="flex flex-col items-center gap-4">
-              <input
-                type="text"
-                className="input input-bordered w-full max-w-md"
-                value={settings.workspacePath}
-                readOnly
-              />
+              <label className="input w-full max-w-md">
+                <span className="badge badge-ghost badge-s">Path</span>
+                <input
+                  type="text"
+                  className="grow"
+                  value={settings.workspacePath}
+                  readOnly
+                />
+              </label>
               <div className="flex gap-2">
                 <button
                   className="btn btn-primary"
                   onClick={handleWorkspaceSelect}
                   disabled={isSelectingWorkspace}
                 >
-                  {isSelectingWorkspace ? 'Selecting...' : 'Browse...'}
+                  {isSelectingWorkspace ? "Selecting..." : "Browse..."}
                 </button>
-                <button
-                  className="btn btn-primary"
-                  onClick={handleNext}
-                >
+                <button className="btn btn-primary" onClick={handleNext}>
                   Next
                 </button>
               </div>
@@ -135,7 +142,9 @@ function Tutorial({ settings, onSettingsChange, onComplete, isFirstTime }: Tutor
       case 1:
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-center">Customize Your Experience</h2>
+            <h2 className="text-2xl font-bold text-center">
+              Customize Your Experience
+            </h2>
             <div className="space-y-4">
               <div>
                 <label className="label">
@@ -144,6 +153,7 @@ function Tutorial({ settings, onSettingsChange, onComplete, isFirstTime }: Tutor
                 <ThemePicker
                   selectedTheme={settings.theme}
                   onThemeChange={(theme) => handleThemeChange(theme)}
+                  direction="up"
                 />
               </div>
               <div>
@@ -154,6 +164,7 @@ function Tutorial({ settings, onSettingsChange, onComplete, isFirstTime }: Tutor
                 <ColorPicker
                   selectedColor={settings.defaultJournalColor}
                   onColorChange={(color) => handleColorChange(color)}
+                  direction="up"
                 />
               </div>
             </div>
@@ -164,10 +175,7 @@ function Tutorial({ settings, onSettingsChange, onComplete, isFirstTime }: Tutor
               >
                 Back
               </button>
-              <button
-                className="btn btn-primary"
-                onClick={handleNext}
-              >
+              <button className="btn btn-primary" onClick={handleNext}>
                 Next
               </button>
             </div>
@@ -179,7 +187,9 @@ function Tutorial({ settings, onSettingsChange, onComplete, isFirstTime }: Tutor
             <h2 className="text-2xl font-bold text-center">Almost Done!</h2>
             <div className="form-control">
               <label className="label cursor-pointer">
-                <span className="label-text">Don't show this tutorial again</span>
+                <span className="label-text">
+                  Don't show this tutorial again
+                </span>
                 <input
                   type="checkbox"
                   className="checkbox"
@@ -195,10 +205,7 @@ function Tutorial({ settings, onSettingsChange, onComplete, isFirstTime }: Tutor
               >
                 Back
               </button>
-              <button
-                className="btn btn-primary"
-                onClick={onComplete}
-              >
+              <button className="btn btn-primary" onClick={onComplete}>
                 Start Journaling
               </button>
             </div>
@@ -222,7 +229,9 @@ function Tutorial({ settings, onSettingsChange, onComplete, isFirstTime }: Tutor
           <div className="flex flex-col justify-center items-center gap-4">
             <div className="form-control">
               <label className="label cursor-pointer">
-                <span className="label-text">Don't show this tutorial again</span>
+                <span className="label-text">
+                  Don't show this tutorial again
+                </span>
                 <input
                   type="checkbox"
                   className="checkbox"
@@ -231,10 +240,7 @@ function Tutorial({ settings, onSettingsChange, onComplete, isFirstTime }: Tutor
                 />
               </label>
             </div>
-            <button
-              className="btn btn-primary"
-              onClick={onComplete}
-            >
+            <button className="btn btn-primary" onClick={onComplete}>
               Start Journaling
             </button>
           </div>

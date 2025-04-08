@@ -114,7 +114,8 @@ export default function SettingsUI({
                 <input
                   type="text"
                   pattern="[A-Za-z][A-Za-z0-9\-]*"
-                  placeholder={settings.name}
+                  placeholder="Enter your name"
+                  value={settings.name}
                   onChange={(e) => handleChange("name", e.target.value)}
                 />
               </label>

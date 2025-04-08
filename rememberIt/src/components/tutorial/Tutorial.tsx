@@ -155,7 +155,8 @@ function Tutorial({
                 <input
                   type="text"
                   pattern="[A-Za-z][A-Za-z0-9\-]*"
-                  placeholder={settings.name || "Enter your name"}
+                  placeholder="Enter your name"
+                  value={settings.name}
                   onChange={(e) => handleNameChange(e)}
                 />
               </label>

@@ -111,7 +111,11 @@ function Dashboard({ settings, onSettingsChange }: DashboardProps) {
             onSettingsChange={onSettingsChange}
           />
           {journals.map((journal) => (
-            <JournalCard key={journal.id} {...journal} />
+            <JournalCard
+              onOpen={(id) => console.log(id)}
+              key={journal.id}
+              {...journal}
+            />
           ))}
         </div>
       </div>

@@ -3,7 +3,12 @@ import "./App.css";
 import Tutorial from "./components/tutorial/Tutorial";
 import EditorWithPreview from "./components/editor/EditorWithPreview";
 import Dashboard from "./components/dashboard/Dashboard";
-import { initializeSettings, saveSettings, type UserSettings, isSetupValid } from "./settings/settings";
+import {
+  initializeSettings,
+  saveSettings,
+  type UserSettings,
+  isSetupValid,
+} from "./settings/settings";
 
 function App() {
   const [showTutorial, setShowTutorial] = useState(true);
@@ -35,7 +40,7 @@ function App() {
       await saveSettings(newSettings);
       setSettings(newSettings);
     } catch (error) {
-      console.error('Failed to save settings:', error);
+      console.error("Failed to save settings:", error);
     }
   };
 
@@ -46,7 +51,12 @@ function App() {
   function ExitButton() {
     return (
       <>
-        <button onClick={toggleTutorial} className="btn btn-lg btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        <button
+          onClick={toggleTutorial}
+          className="btn btn-lg btn-circle btn-ghost absolute right-2 top-2"
+        >
+          ✕
+        </button>
       </>
     );
   }
@@ -59,7 +69,7 @@ function App() {
   return (
     <main className="w-full h-screen">
       {showTutorial ? (
-        <div className="welcome-screen flex flex-col">
+        <div className="flex flex-col">
           {!isFirstTime && <ExitButton />}
           <Tutorial
             settings={settings}
@@ -70,7 +80,10 @@ function App() {
         </div>
       ) : (
         <div className="w-full h-full">
-          <Dashboard settings={settings} onSettingsChange={handleSettingsChange} />
+          <Dashboard
+            settings={settings}
+            onSettingsChange={handleSettingsChange}
+          />
         </div>
       )}
     </main>

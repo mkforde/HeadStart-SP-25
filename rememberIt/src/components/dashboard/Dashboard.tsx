@@ -6,6 +6,7 @@ import SettingsUI from "../../settings/SettingsUI";
 import { type UserSettings } from "../../settings/settings";
 import { getJournals, createJournal } from "../../journal/journalFS";
 import PositiveMessageAlert from "./PositiveMessageAlert";
+import PremadePreview from "../editor/PremadePreview";
 
 interface DashboardProps {
   settings: UserSettings;
@@ -16,6 +17,8 @@ function Dashboard({ settings, onSettingsChange }: DashboardProps) {
   const [journals, setJournals] = useState<Journal[]>([]);
   const [showSettings, setShowSettings] = useState(false);
   const [showAlert, setShowAlert] = useState(true); // Track alert visibility
+  const [selectedJournal, setSelectedJournal] = useState<Journal | null>(null);
+  const [showPreview, setShowPreview] = useState(false);
 
   // Load journals from workspace
   useEffect(() => {
@@ -39,7 +42,9 @@ function Dashboard({ settings, onSettingsChange }: DashboardProps) {
     newJournal: Omit<Journal, "id" | "createdAt" | "lastModified">
   ) => {
     try {
+      console.log("Creating new journal with data:", newJournal);
       const journal = await createJournal(settings.workspacePath, newJournal);
+      console.log("Journal created successfully:", journal);
       setJournals((prev) => [...prev, journal]);
     } catch (error) {
       console.error("Error creating journal:", error);
@@ -70,7 +75,7 @@ function Dashboard({ settings, onSettingsChange }: DashboardProps) {
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-4">
             <h1 className="text-2xl font-bold">Your Journals</h1>
-            <span className="text-base-content/70">
+            <span className="text-base-content/70 underline decoration-primary">
               {journals.length} {journals.length === 1 ? "journal" : "journals"}
             </span>
           </div>
@@ -112,13 +117,27 @@ function Dashboard({ settings, onSettingsChange }: DashboardProps) {
           />
           {journals.map((journal) => (
             <JournalCard
-              onOpen={(id) => console.log(id)}
               key={journal.id}
               {...journal}
+              onOpen={() => {
+                // Navigate to premade preview instead of journal editor
+                setSelectedJournal(journal);
+                setShowPreview(true);
+              }}
             />
           ))}
         </div>
       </div>
+
+      {showPreview && selectedJournal && (
+        <div className="absolute inset-0 bg-base-100 z-10">
+          <PremadePreview
+            journal={selectedJournal}
+            workspacePath={settings.workspacePath}
+            onBack={() => setShowPreview(false)}
+          />
+        </div>
+      )}
 
       {/* Settings UI */}
       <SettingsUI

@@ -13,7 +13,8 @@ interface SlideshowProps {
 export function Slideshow({ slides, className = "" }: SlideshowProps) {
   const [slide, setSlide] = useState(0);
 
-  const increment = () => {
+  const increment = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent form submission
     if (slide < slides.length - 1) {
       setSlide(slide + 1);
     } else {
@@ -21,7 +22,8 @@ export function Slideshow({ slides, className = "" }: SlideshowProps) {
     }
   };
 
-  const decrement = () => {
+  const decrement = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent form submission
     if (slide > 0) {
       setSlide(slide - 1);
     } else {
@@ -29,15 +31,18 @@ export function Slideshow({ slides, className = "" }: SlideshowProps) {
     }
   };
 
-  const setPage = (index: number) => {
+  const setPage = (index: number, e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent form submission
     setSlide(index);
   };
 
   return (
-    <div className={`slideshow bg-base-200 rounded-lg shadow-xl p-6 max-w-3xl mx-auto ${className}`}>
+    <div
+      className={`slideshow bg-base-200 rounded-lg shadow-xl p-6 max-w-3xl mx-auto ${className}`}
+    >
       <div className="relative">
-        <img 
-          src={slides[slide].img} 
+        <img
+          src={slides[slide].img}
           alt={slides[slide].description}
           className="rounded-lg shadow-md w-full h-[400px] object-cover transition-all duration-300"
         />
@@ -46,12 +51,13 @@ export function Slideshow({ slides, className = "" }: SlideshowProps) {
           {slides[slide].description}
         </p>
       </div>
-      
+
       <div className="pagination flex justify-center items-center gap-2 mt-4">
-        <button 
-          className="btn btn-circle btn-sm" 
+        <button
+          className="btn btn-circle btn-sm"
           onClick={decrement}
           aria-label="Previous slide"
+          type="button" // Explicitly set button type
         >
           &lt;
         </button>
@@ -63,22 +69,24 @@ export function Slideshow({ slides, className = "" }: SlideshowProps) {
               className={`btn btn-circle btn-sm ${
                 slide === index ? "btn-primary" : "btn-ghost"
               }`}
-              onClick={() => setPage(index)}
+              onClick={(e) => setPage(index, e)}
               aria-label={`Go to slide ${index + 1}`}
+              type="button" // Explicitly set button type
             >
               {index + 1}
             </button>
           ))}
         </div>
 
-        <button 
-          className="btn btn-circle btn-sm" 
+        <button
+          className="btn btn-circle btn-sm"
           onClick={increment}
           aria-label="Next slide"
+          type="button" // Explicitly set button type
         >
           &gt;
         </button>
       </div>
     </div>
   );
-} 
+}

@@ -8,24 +8,24 @@ import ThemePicker from "../common/ThemePicker";
 
 const tutorialSlides: Slide[] = [
   {
-    img: "https://placehold.co/600x400/EEE/31343C",
+    img: "https://raw.githubusercontent.com/mkforde/rememberIt-images/refs/heads/main/screenshots/screen5.png",
     description: "Welcome to RememberIt - Your Modern Journaling Companion",
   },
   {
-    img: "https://placehold.co/600x400/EEE/31343C",
+    img: "https://raw.githubusercontent.com/mkforde/rememberIt-images/refs/heads/main/screenshots/screen3.png",
     description: "Highly extensible - Customize your journaling experience",
   },
   {
-    img: "https://placehold.co/600x400/EEE/31343C",
+    img: "https://raw.githubusercontent.com/mkforde/rememberIt-images/refs/heads/main/screenshots/screen1.png",
     description: "Explore beautiful themes to match your style",
   },
   {
-    img: "https://placehold.co/600x400/EEE/31343C",
+    img: "https://raw.githubusercontent.com/mkforde/rememberIt-images/refs/heads/main/screenshots/screen4.png",
     description: "Rich text editing with markdown support",
   },
   {
-    img: "https://placehold.co/600x400/EEE/31343C",
-    description: "Plugin system for endless possibilities",
+    img: "https://raw.githubusercontent.com/mkforde/rememberIt-images/refs/heads/main/screenshots/screen2.png",
+    description: "Based on your local filesystem - No cloud, no worries",
   },
 ];
 
